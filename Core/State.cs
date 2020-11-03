@@ -8,6 +8,7 @@ namespace NPuzzle.Core
 	{
 		//public IDictionary<char,short> Order { get; private set; }
 		public IList<char> Order { get; private set; }
+		private int hashCode;
 		public IDictionary<char, short> OrderIndex { get; private set; }
 		public short PuzzleWidth { get; private set; }
 		public short DashIndex { get; private set; }
@@ -23,6 +24,7 @@ namespace NPuzzle.Core
 				OrderIndex[Order[i]] = i;
 			}
 			DashIndex = (short)order.IndexOf('-');
+			hashCode = new string(Order.ToArray()).GetHashCode();
 		}
 
 		/*public State(short puzzleWidth, State lastState) : this(puzzleWidth, lastState.Order.Select(c => c).ToList())
@@ -38,6 +40,7 @@ namespace NPuzzle.Core
 			Order[DashIndex] = Order[newDashIndex];
 			Order[newDashIndex] = '-';
 			DashIndex = newDashIndex;
+			hashCode = new string(Order.ToArray()).GetHashCode();
 		}
 
 		public bool MoveUp()
@@ -121,7 +124,7 @@ namespace NPuzzle.Core
 			}
 		}
 
-		public override int GetHashCode() => new string(Order.ToArray()).GetHashCode();
+		public override int GetHashCode() => hashCode;
 
 		public override string ToString() => base.ToString();
 

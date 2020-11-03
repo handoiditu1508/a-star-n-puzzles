@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using NPuzzle.Core;
 
@@ -44,8 +45,12 @@ namespace NPuzzle
 			}
 			#endregion
 
+			//Stopwatch watch = new Stopwatch();
+			//watch.Start();
 			AStar aStar = new AStar(n, begin, goal);
 			Result result = aStar.Solve();
+			//watch.Stop();
+			//Console.WriteLine(watch.ElapsedMilliseconds);
 
 			string temp = "";
 			foreach (short dashIndex in result.DashIndexes)

@@ -11,7 +11,6 @@ namespace NPuzzle.Core
 		private IDictionary<State, short> g;
 		private IDictionary<State, short> h;
 		private IDictionary<State, State> open;
-		//public IList<Movement> Moves { get; private set; }
 		private IDictionary<State, State> prev;
 		private IDictionary<State, Movement> move;
 
