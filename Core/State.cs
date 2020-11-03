@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -5,25 +6,35 @@ namespace NPuzzle.Core
 {
 	public class State
 	{
+		//public IDictionary<char,short> Order { get; private set; }
 		public IList<char> Order { get; private set; }
+		public IDictionary<char, short> OrderIndex { get; private set; }
 		public short PuzzleWidth { get; private set; }
 		public short DashIndex { get; private set; }
-		public State LastState { get; private set; }
+		//public State LastState { get; private set; }
 
 		public State(short puzzleWidth, IList<char> order)
 		{
-			this.PuzzleWidth = puzzleWidth;
-			this.Order = order;
+			PuzzleWidth = puzzleWidth;
+			Order = order;
+			OrderIndex = new Dictionary<char, short>();
+			for (short i = 0; i < Order.Count; i++)
+			{
+				OrderIndex[Order[i]] = i;
+			}
 			DashIndex = (short)order.IndexOf('-');
 		}
 
-		public State(short puzzleWidth, State lastState) : this(puzzleWidth, lastState.Order.Select(c => c).ToList())
+		/*public State(short puzzleWidth, State lastState) : this(puzzleWidth, lastState.Order.Select(c => c).ToList())
 		{
 			this.LastState = lastState;
-		}
+		}*/
 
 		private void moveDashToIndex(short newDashIndex)
 		{
+			OrderIndex['-'] = newDashIndex;
+			OrderIndex[Order[newDashIndex]] = DashIndex;
+
 			Order[DashIndex] = Order[newDashIndex];
 			Order[newDashIndex] = '-';
 			DashIndex = newDashIndex;
@@ -97,7 +108,7 @@ namespace NPuzzle.Core
 			}
 			else
 			{
-				State state = (State)obj;
+				/*State state = (State)obj;
 				if (Order.Count != state.Order.Count)
 					return false;
 				for (short i = 0; i < Order.Count; i++)
@@ -105,18 +116,24 @@ namespace NPuzzle.Core
 					if (Order[i] != state.Order[i])
 						return false;
 				}
-				return true;
+				return true;*/
+				return GetHashCode() == obj.GetHashCode();
 			}
 		}
 
-		public override int GetHashCode()
+		public override int GetHashCode() => new string(Order.ToArray()).GetHashCode();
+
+		public override string ToString() => base.ToString();
+
+		public short getManhattanDistance(char c, short destinationIndex)
 		{
-			return base.GetHashCode();
+			short row1 = (short)(OrderIndex[c] / PuzzleWidth);
+			short col1 = (short)(OrderIndex[c] % PuzzleWidth);
+			short row2 = (short)(destinationIndex / PuzzleWidth);
+			short col2 = (short)(destinationIndex % PuzzleWidth);
+			return (short)(Math.Abs(row1 - row2) + Math.Abs(col1 - col2));
 		}
 
-		public override string ToString()
-		{
-			return base.ToString();
-		}
+		public State Clone() => new State(PuzzleWidth, Order.Select(c => c).ToList());
 	}
 }

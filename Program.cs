@@ -46,11 +46,24 @@ namespace NPuzzle
 			#endregion
 
 			AStar aStar = new AStar(n, begin, goal);
-			IList<Movement> moves = aStar.Solve();
-			foreach (Movement move in moves)
+			Result result = aStar.Solve();
+
+			string temp = "";
+			foreach (short dashIndex in result.DashIndexes)
+			{
+				temp += $"({dashIndex / n},{dashIndex % n}) -> ";
+			}
+			temp = temp.Substring(0, temp.Length - 4);
+			Console.WriteLine(temp);
+
+			temp = "";
+			foreach (Movement move in result.Moves)
 			{
 				Console.Write(move.ToString() + " ");
+				temp += $"{move.ToString()} ";
 			}
+			temp = temp.Substring(0, temp.Length - 1);
+			Console.WriteLine(temp);
 		}
 	}
 }
