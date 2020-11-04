@@ -74,8 +74,8 @@ namespace NPuzzle.Core
 					prev[newState] = bestState;
 					open[newState] = newState;
 					move[newState] = Movement.Up;
+					h[newState] = calH(newState);
 				}
-				h[newState] = calH(newState);
 				#endregion
 
 				#region move right
@@ -99,8 +99,8 @@ namespace NPuzzle.Core
 					prev[newState] = bestState;
 					open[newState] = newState;
 					move[newState] = Movement.Right;
+					h[newState] = calH(newState);
 				}
-				h[newState] = calH(newState);
 				#endregion
 
 				#region move down
@@ -124,8 +124,8 @@ namespace NPuzzle.Core
 					prev[newState] = bestState;
 					open[newState] = newState;
 					move[newState] = Movement.Down;
+					h[newState] = calH(newState);
 				}
-				h[newState] = calH(newState);
 				#endregion
 
 				#region move left
@@ -149,8 +149,8 @@ namespace NPuzzle.Core
 					prev[newState] = bestState;
 					open[newState] = newState;
 					move[newState] = Movement.Left;
+					h[newState] = calH(newState);
 				}
-				h[newState] = calH(newState);
 				#endregion
 			}
 			return result;
