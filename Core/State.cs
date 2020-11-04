@@ -6,13 +6,11 @@ namespace NPuzzle.Core
 {
 	public class State
 	{
-		//public IDictionary<char,short> Order { get; private set; }
 		public IList<char> Order { get; private set; }
 		private int hashCode;
 		public IDictionary<char, short> OrderIndex { get; private set; }
 		public short PuzzleWidth { get; private set; }
 		public short DashIndex { get; private set; }
-		//public State LastState { get; private set; }
 
 		public State(short puzzleWidth, IList<char> order)
 		{
@@ -27,12 +25,7 @@ namespace NPuzzle.Core
 			hashCode = new string(Order.ToArray()).GetHashCode();
 		}
 
-		/*public State(short puzzleWidth, State lastState) : this(puzzleWidth, lastState.Order.Select(c => c).ToList())
-		{
-			this.LastState = lastState;
-		}*/
-
-		private void moveDashToIndex(short newDashIndex)
+		/*private void moveDashToIndex(short newDashIndex)
 		{
 			OrderIndex['-'] = newDashIndex;
 			OrderIndex[Order[newDashIndex]] = DashIndex;
@@ -41,52 +34,61 @@ namespace NPuzzle.Core
 			Order[newDashIndex] = '-';
 			DashIndex = newDashIndex;
 			hashCode = new string(Order.ToArray()).GetHashCode();
-		}
+		}*/
 
-		public bool MoveUp()
+		public State MoveUp()
 		{
 			short newDashIndex = (short)(DashIndex - PuzzleWidth);
 			if (newDashIndex > -1)
 			{
-				moveDashToIndex(newDashIndex);
-				return true;
+				IList<char> newOrder = Order.Select(c => c).ToList();
+				newOrder[DashIndex] = newOrder[newDashIndex];
+				newOrder[newDashIndex] = '-';
+				return new State(PuzzleWidth, newOrder);
 			}
-			return false;
+			return null;
 		}
 
-		public bool MoveRight()
+		public State MoveRight()
 		{
 			short newDashIndex = (short)(DashIndex + 1);
 			if (newDashIndex % PuzzleWidth != 0)
 			{
-				moveDashToIndex(newDashIndex);
-				return true;
+				IList<char> newOrder = Order.Select(c => c).ToList();
+				newOrder[DashIndex] = newOrder[newDashIndex];
+				newOrder[newDashIndex] = '-';
+				return new State(PuzzleWidth, newOrder);
 			}
-			return false;
+			return null;
 		}
 
-		public bool MoveDown()
+		public State MoveDown()
 		{
 			short newDashIndex = (short)(DashIndex + PuzzleWidth);
 			if (newDashIndex < Order.Count)
 			{
-				moveDashToIndex(newDashIndex);
-				return true;
+				IList<char> newOrder = Order.Select(c => c).ToList();
+				newOrder[DashIndex] = newOrder[newDashIndex];
+				newOrder[newDashIndex] = '-';
+				return new State(PuzzleWidth, newOrder);
 			}
-			return false;
+			return null;
 		}
 
-		public bool MoveLeft()
+		public State MoveLeft()
 		{
 			if (DashIndex % PuzzleWidth != 0)
 			{
-				moveDashToIndex((short)(DashIndex - 1));
-				return true;
+				short newDashIndex = (short)(DashIndex - 1);
+				IList<char> newOrder = Order.Select(c => c).ToList();
+				newOrder[DashIndex] = newOrder[newDashIndex];
+				newOrder[newDashIndex] = '-';
+				return new State(PuzzleWidth, newOrder);
 			}
-			return false;
+			return null;
 		}
 
-		public bool Move(Movement movement)
+		public State Move(Movement movement)
 		{
 			switch (movement)
 			{
@@ -99,7 +101,7 @@ namespace NPuzzle.Core
 				case Movement.Left:
 					return MoveLeft();
 				default:
-					return false;
+					return null;
 			}
 		}
 
@@ -136,7 +138,5 @@ namespace NPuzzle.Core
 			short col2 = (short)(destinationIndex % PuzzleWidth);
 			return (short)(Math.Abs(row1 - row2) + Math.Abs(col1 - col2));
 		}
-
-		public State Clone() => new State(PuzzleWidth, Order.Select(c => c).ToList());
 	}
 }
